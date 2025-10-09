@@ -11,6 +11,7 @@ import Predictions from "./pages/Predictions";
 import Alerts from "./pages/Alerts";
 import CostOptimization from "./pages/CostOptimization";
 import Admin from "./pages/Admin";
+import Demo from "./pages/Demo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/" element={<Layout><Dashboard /></Layout>} />
           <Route path="/inventory" element={<Layout><Inventory /></Layout>} />
           <Route path="/predictions" element={<Layout><Predictions /></Layout>} />
+          <Route path="/demo" element={<Layout><Demo /></Layout>} />
           <Route path="/alerts" element={<Layout><Alerts /></Layout>} />
           <Route path="/cost-optimization" element={<Layout><CostOptimization /></Layout>} />
           <Route path="/admin" element={<Layout><Admin /></Layout>} />
