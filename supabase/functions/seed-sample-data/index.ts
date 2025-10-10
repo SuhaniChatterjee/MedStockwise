@@ -18,7 +18,14 @@ serve(async (req) => {
 
     console.log("Starting data seeding...");
 
-    // Sample inventory items from the PDF
+    // Vendor mapping from vendor_data.csv
+    const vendorMap: Record<string, string> = {
+      "V001": "MedSupplies Inc.",
+      "V002": "EquipMed Co.",
+      "V003": "HealthTools Ltd."
+    };
+
+    // Real inventory data from inventory_data.csv (sample representative items)
     const inventoryItems = [
       {
         item_name: "Ventilator",
@@ -29,73 +36,73 @@ serve(async (req) => {
         unit_cost: 5832.29,
         avg_usage_per_day: 55,
         restock_lead_time: 12,
-        vendor_name: "MedSupply Inc"
+        vendor_name: "MedSupplies Inc."
       },
       {
         item_name: "Surgical Mask",
-        item_type: "PPE",
+        item_type: "Equipment",
         current_stock: 2371,
         min_required: 384,
         max_capacity: 5562,
         unit_cost: 16062.98,
         avg_usage_per_day: 470,
         restock_lead_time: 6,
-        vendor_name: "HealthCare Supplies"
+        vendor_name: "MedSupplies Inc."
       },
       {
         item_name: "IV Drip",
-        item_type: "Medical Supplies",
+        item_type: "Equipment",
         current_stock: 2410,
         min_required: 338,
         max_capacity: 1013,
         unit_cost: 15426.53,
         avg_usage_per_day: 158,
         restock_lead_time: 12,
-        vendor_name: "PharmaTech"
+        vendor_name: "HealthTools Ltd."
       },
       {
-        item_name: "Surgical Gloves",
-        item_type: "PPE",
-        current_stock: 1542,
-        min_required: 264,
-        max_capacity: 1018,
-        unit_cost: 4467.55,
-        avg_usage_per_day: 108,
-        restock_lead_time: 17,
-        vendor_name: "MedSupply Inc"
+        item_name: "Gloves",
+        item_type: "Equipment",
+        current_stock: 2448,
+        min_required: 28,
+        max_capacity: 1314,
+        unit_cost: 2729.08,
+        avg_usage_per_day: 418,
+        restock_lead_time: 5,
+        vendor_name: "EquipMed Co."
       },
       {
-        item_name: "Syringes",
-        item_type: "Medical Supplies",
-        current_stock: 2038,
-        min_required: 438,
-        max_capacity: 1131,
-        unit_cost: 744.10,
-        avg_usage_per_day: 207,
-        restock_lead_time: 15,
-        vendor_name: "HealthCare Supplies"
+        item_name: "X-ray Machine",
+        item_type: "Consumable",
+        current_stock: 3298,
+        min_required: 231,
+        max_capacity: 3736,
+        unit_cost: 10669.37,
+        avg_usage_per_day: 244,
+        restock_lead_time: 2,
+        vendor_name: "MedSupplies Inc."
       },
       {
         item_name: "Bandages",
-        item_type: "Medical Supplies",
+        item_type: "Consumable",
         current_stock: 1850,
         min_required: 500,
         max_capacity: 2500,
         unit_cost: 125.50,
         avg_usage_per_day: 95,
         restock_lead_time: 10,
-        vendor_name: "PharmaTech"
+        vendor_name: "HealthTools Ltd."
       },
       {
-        item_name: "X-Ray Film",
-        item_type: "Equipment",
-        current_stock: 320,
-        min_required: 150,
-        max_capacity: 800,
-        unit_cost: 2350.00,
-        avg_usage_per_day: 12,
-        restock_lead_time: 14,
-        vendor_name: "MedSupply Inc"
+        item_name: "Syringes",
+        item_type: "Consumable",
+        current_stock: 2038,
+        min_required: 438,
+        max_capacity: 1131,
+        unit_cost: 744.10,
+        avg_usage_per_day: 207,
+        restock_lead_time: 15,
+        vendor_name: "EquipMed Co."
       },
       {
         item_name: "Oxygen Tanks",
@@ -106,7 +113,7 @@ serve(async (req) => {
         unit_cost: 8500.00,
         avg_usage_per_day: 8,
         restock_lead_time: 20,
-        vendor_name: "PharmaTech"
+        vendor_name: "HealthTools Ltd."
       }
     ];
 
