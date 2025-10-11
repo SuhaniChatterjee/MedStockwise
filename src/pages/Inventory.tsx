@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Search, AlertTriangle } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -133,29 +134,41 @@ export default function Inventory() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div className="space-y-6 animate-in fade-in duration-500">
+        <div className="space-y-2">
+          <Skeleton className="h-10 w-80" />
+          <Skeleton className="h-6 w-96" />
+        </div>
+        <div className="space-y-4">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-20 w-full" />
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight">Inventory Management</h1>
-          <p className="text-muted-foreground mt-2">
-            Manage and track all hospital inventory items
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="flex justify-between items-start">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Inventory Management
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Track and manage all hospital inventory items
           </p>
         </div>
         {isManager && (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                Add Item
+              <Button size="lg" className="gap-2 shadow-lg">
+                <Plus className="h-5 w-5" />
+                Add New Item
               </Button>
             </DialogTrigger>
+            {/* ... keep existing dialog content */}
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New Inventory Item</DialogTitle>
@@ -311,50 +324,57 @@ export default function Inventory() {
         )}
       </div>
 
-      <Card>
+      {/* Search Card */}
+      <Card className="border-none shadow-lg">
         <CardHeader>
-          <CardTitle>Search Inventory</CardTitle>
+          <CardTitle className="text-xl">Search Inventory</CardTitle>
           <CardDescription>
-            Find items by name
+            Find items by name or filter by type
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="relative">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
             <Input
-              placeholder="Search items..."
+              placeholder="Search for inventory items..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 h-12"
             />
           </div>
         </CardContent>
       </Card>
 
-      <Card>
+      {/* Inventory Table */}
+      <Card className="border-none shadow-lg">
         <CardHeader>
-          <CardTitle>Inventory Items ({filteredItems.length})</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-xl">Inventory Items</CardTitle>
+            <Badge variant="secondary" className="text-base px-3 py-1">
+              {filteredItems.length} items
+            </Badge>
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
+          <div className="rounded-lg border overflow-hidden">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Item Name</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Current Stock</TableHead>
-                  <TableHead>Min Required</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Unit Cost</TableHead>
-                  <TableHead>Avg Usage/Day</TableHead>
+                <TableRow className="bg-muted/50">
+                  <TableHead className="font-semibold">Item Name</TableHead>
+                  <TableHead className="font-semibold">Type</TableHead>
+                  <TableHead className="font-semibold">Current Stock</TableHead>
+                  <TableHead className="font-semibold">Min Required</TableHead>
+                  <TableHead className="font-semibold">Status</TableHead>
+                  <TableHead className="font-semibold">Unit Cost</TableHead>
+                  <TableHead className="font-semibold">Avg Usage/Day</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredItems.map((item) => (
-                  <TableRow key={item.id}>
+                  <TableRow key={item.id} className="hover:bg-muted/30 transition-colors">
                     <TableCell className="font-medium">{item.item_name}</TableCell>
                     <TableCell>{item.item_type}</TableCell>
-                    <TableCell>{item.current_stock}</TableCell>
+                    <TableCell className="font-semibold">{item.current_stock}</TableCell>
                     <TableCell>{item.min_required}</TableCell>
                     <TableCell>{getStockStatus(item)}</TableCell>
                     <TableCell>${parseFloat(item.unit_cost.toString()).toFixed(2)}</TableCell>

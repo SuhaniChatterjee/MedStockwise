@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, TrendingDown, AlertTriangle, DollarSign } from "lucide-react";
+import { Package, TrendingDown, AlertTriangle, DollarSign, TrendingUp } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
@@ -117,83 +117,114 @@ export default function Dashboard() {
 
   if (loading || seeding) {
     return (
-      <div className="flex flex-col items-center justify-center h-96 space-y-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        {seeding && <p className="text-muted-foreground">Initializing database with sample data...</p>}
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary"></div>
+          <div className="absolute inset-0 animate-ping rounded-full h-16 w-16 border-4 border-primary opacity-20"></div>
+        </div>
+        {seeding && (
+          <div className="text-center space-y-2">
+            <p className="text-lg font-medium text-foreground">Initializing Database</p>
+            <p className="text-sm text-muted-foreground">Loading sample data for your inventory system...</p>
+          </div>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div>
-        <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground mt-2">
-          Overview of your hospital inventory system
+    <div className="space-y-8 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          Dashboard
+        </h1>
+        <p className="text-muted-foreground text-lg">
+          Real-time overview of your hospital inventory system
         </p>
       </div>
 
+      {/* KPI Cards */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((stat) => {
+        {statCards.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title} className="overflow-hidden hover-scale">
-              <CardHeader className="pb-2">
+            <Card 
+              key={stat.title} 
+              className="overflow-hidden card-hover border-none"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
                     {stat.title}
                   </CardTitle>
-                  <div className={`p-2 bg-gradient-to-br ${stat.color} rounded-lg`}>
-                    <Icon className="h-4 w-4 text-white" />
+                  <div className={`p-2.5 bg-gradient-to-br ${stat.color} rounded-lg shadow-md`}>
+                    <Icon className="h-5 w-5 text-white" />
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{stat.value}</div>
+                <div className="text-3xl font-bold tracking-tight animate-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: `${index * 150}ms` }}>
+                  {stat.value}
+                </div>
               </CardContent>
             </Card>
           );
         })}
       </div>
 
-      <Card>
+      {/* Quick Actions */}
+      <Card className="border-none shadow-lg">
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>
-            Common tasks to manage your inventory
+          <CardTitle className="text-2xl">Quick Actions</CardTitle>
+          <CardDescription className="text-base">
+            Common tasks to manage your inventory efficiently
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
             <a
               href="/inventory"
-              className="p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+              className="group p-6 border rounded-xl hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
             >
-              <Package className="h-6 w-6 mb-2 text-primary" />
-              <h3 className="font-semibold">View Inventory</h3>
-              <p className="text-sm text-muted-foreground">
-                Browse all inventory items
-              </p>
+              <div className="space-y-3">
+                <div className="p-3 bg-primary/10 rounded-lg w-fit group-hover:bg-primary/20 transition-colors">
+                  <Package className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-semibold text-lg">View Inventory</h3>
+                <p className="text-sm text-muted-foreground">
+                  Browse and manage all inventory items
+                </p>
+              </div>
             </a>
             <a
               href="/predictions"
-              className="p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+              className="group p-6 border rounded-xl hover:border-secondary/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
             >
-              <TrendingDown className="h-6 w-6 mb-2 text-primary" />
-              <h3 className="font-semibold">Run Predictions</h3>
-              <p className="text-sm text-muted-foreground">
-                Predict future demand
-              </p>
+              <div className="space-y-3">
+                <div className="p-3 bg-secondary/10 rounded-lg w-fit group-hover:bg-secondary/20 transition-colors">
+                  <TrendingUp className="h-6 w-6 text-secondary" />
+                </div>
+                <h3 className="font-semibold text-lg">Run Predictions</h3>
+                <p className="text-sm text-muted-foreground">
+                  AI-powered demand forecasting
+                </p>
+              </div>
             </a>
             <a
               href="/inventory"
-              className="p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+              className="group p-6 border rounded-xl hover:border-warning/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
             >
-              <AlertTriangle className="h-6 w-6 mb-2 text-warning" />
-              <h3 className="font-semibold">Low Stock Alerts</h3>
-              <p className="text-sm text-muted-foreground">
-                Check items needing restock
-              </p>
+              <div className="space-y-3">
+                <div className="p-3 bg-warning/10 rounded-lg w-fit group-hover:bg-warning/20 transition-colors">
+                  <AlertTriangle className="h-6 w-6 text-warning" />
+                </div>
+                <h3 className="font-semibold text-lg">Low Stock Alerts</h3>
+                <p className="text-sm text-muted-foreground">
+                  Items requiring immediate attention
+                </p>
+              </div>
             </a>
           </div>
         </CardContent>
