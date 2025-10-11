@@ -120,7 +120,7 @@ serve(async (req) => {
     // Insert inventory items
     const { data: insertedItems, error: inventoryError } = await supabase
       .from("inventory_items")
-      .upsert(inventoryItems, { onConflict: "item_name", ignoreDuplicates: false })
+      .insert(inventoryItems)
       .select();
 
     if (inventoryError) {
@@ -133,7 +133,7 @@ serve(async (req) => {
     // Insert model registry entry (from PDF: Validation MAE: 215.72, Test MAE: 157.17)
     const { data: modelData, error: modelError } = await supabase
       .from("model_registry")
-      .upsert({
+      .insert({
         model_version: "v1.0.0",
         model_type: "GradientBoosting",
         mae: 157.17,
@@ -159,7 +159,7 @@ serve(async (req) => {
           "val_samples": 75,
           "test_samples": 75
         }
-      }, { onConflict: "model_version", ignoreDuplicates: false })
+      })
       .select()
       .single();
 
@@ -225,7 +225,7 @@ serve(async (req) => {
 
       const { error: dashPredError } = await supabase
         .from("predictions")
-        .upsert(dashboardPredictions, { onConflict: "item_id", ignoreDuplicates: false });
+        .insert(dashboardPredictions);
 
       if (dashPredError) {
         console.error("Error inserting dashboard predictions:", dashPredError);
