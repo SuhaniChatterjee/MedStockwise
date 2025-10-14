@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,12 +8,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Activity } from "lucide-react";
+import PasswordInput from "@/components/auth/PasswordInput";
+import { passwordSchema, validatePasswordMatch } from "@/lib/passwordValidation";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<{ email?: string; password?: string; confirm?: string }>({});
   const { signIn, signUp, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -47,8 +51,32 @@ export default function Auth() {
     setIsLoading(false);
   };
 
+  const validateSignupForm = (): boolean => {
+    const newErrors: { email?: string; password?: string; confirm?: string } = {};
+
+    if (!email.includes('@')) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    try {
+      passwordSchema.parse(password);
+    } catch (err: any) {
+      newErrors.password = err.errors[0]?.message || "Invalid password";
+    }
+
+    if (!validatePasswordMatch(password, confirmPassword)) {
+      newErrors.confirm = "Passwords do not match";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateSignupForm()) return;
+
     setIsLoading(true);
 
     const { error } = await signUp(email, password, fullName);
@@ -62,7 +90,7 @@ export default function Auth() {
     } else {
       toast({
         title: "Success",
-        description: "Account created successfully! Please sign in.",
+        description: "Account created successfully! Check your email to verify your account.",
       });
     }
 
@@ -102,15 +130,18 @@ export default function Auth() {
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
+                <PasswordInput
+                  id="password"
+                  label="Password"
+                  value={password}
+                  onChange={setPassword}
+                  required
+                  autoComplete="current-password"
+                />
+                <div className="flex justify-end">
+                  <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+                    Forgot password?
+                  </Link>
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Signing in..." : "Sign In"}
@@ -140,17 +171,38 @@ export default function Auth() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
+                  {errors.email && (
+                    <p className="text-sm text-destructive">{errors.email}</p>
+                  )}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
-                  <Input
+                <div>
+                  <PasswordInput
                     id="signup-password"
-                    type="password"
+                    label="Password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={setPassword}
+                    showStrengthMeter
                     required
-                    minLength={6}
+                    autoComplete="new-password"
+                    placeholder="Min 12 chars with uppercase, lowercase, digit & symbol"
                   />
+                  {errors.password && (
+                    <p className="text-sm text-destructive mt-1">{errors.password}</p>
+                  )}
+                </div>
+                <div>
+                  <PasswordInput
+                    id="confirm-password"
+                    label="Confirm Password"
+                    value={confirmPassword}
+                    onChange={setConfirmPassword}
+                    required
+                    autoComplete="new-password"
+                    placeholder="Re-enter your password"
+                  />
+                  {errors.confirm && (
+                    <p className="text-sm text-destructive mt-1">{errors.confirm}</p>
+                  )}
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Creating account..." : "Sign Up"}

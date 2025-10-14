@@ -221,6 +221,27 @@ export type Database = {
         }
         Relationships: []
       }
+      login_attempts: {
+        Row: {
+          attempt_time: string | null
+          id: string
+          identifier: string
+          success: boolean | null
+        }
+        Insert: {
+          attempt_time?: string | null
+          id?: string
+          identifier: string
+          success?: boolean | null
+        }
+        Update: {
+          attempt_time?: string | null
+          id?: string
+          identifier?: string
+          success?: boolean | null
+        }
+        Relationships: []
+      }
       model_registry: {
         Row: {
           created_at: string
@@ -266,6 +287,27 @@ export type Database = {
           r2_score?: number | null
           rmse?: number | null
           training_date?: string
+        }
+        Relationships: []
+      }
+      password_history: {
+        Row: {
+          created_at: string | null
+          id: string
+          password_hash: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          password_hash: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          password_hash?: string
+          user_id?: string
         }
         Relationships: []
       }

@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Activity, BarChart3, Package, TrendingUp, Users, LogOut } from "lucide-react";
+import { Activity, BarChart3, Package, TrendingUp, Users, LogOut, Key } from "lucide-react";
 
 interface LayoutProps {
   children: ReactNode;
@@ -93,6 +93,10 @@ export function Layout({ children }: LayoutProps) {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate("/change-password")}>
+                    <Key className="mr-2 h-4 w-4" />
+                    Change Password
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => signOut()}>
                     <LogOut className="mr-2 h-4 w-4" />
                     Sign Out
