@@ -242,15 +242,22 @@ export function SingleRowTest() {
                 Top Contributing Features
               </h4>
               <div className="space-y-2">
-                {result.feature_contributions?.slice(0, 3).map((feature: any, idx: number) => (
-                  <div key={idx} className="space-y-1">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium">{feature.name}</span>
-                      <Badge variant="outline">{feature.contribution.toFixed(2)}%</Badge>
+                {result.feature_contributions && Object.entries(result.feature_contributions)
+                  .map(([name, value]) => ({
+                    name: name.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+                    contribution: (value as number) * 100
+                  }))
+                  .sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution))
+                  .slice(0, 3)
+                  .map((feature, idx) => (
+                    <div key={idx} className="space-y-1">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="font-medium">{feature.name}</span>
+                        <Badge variant="outline">{feature.contribution.toFixed(2)}%</Badge>
+                      </div>
+                      <Progress value={Math.abs(feature.contribution)} className="h-2" />
                     </div>
-                    <Progress value={Math.abs(feature.contribution)} className="h-2" />
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
 
