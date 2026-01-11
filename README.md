@@ -1,6 +1,13 @@
-# Project Name
+# MedStock-Wise
 
-A modern, scalable web application built with React and TypeScript, optimized for performance, maintainability, and clean UI development.
+An AI-driven healthcare inventory management platform designed to forecast demand, optimize stock levels, and reduce shortages and wastage using predictive analytics.
+
+---
+
+## 🌐 Live Demo
+
+🚀 **Deployed on Vercel:**  
+👉 https://medstockwiseapp.vercel.app/
 
 ---
 
@@ -56,6 +63,10 @@ Tailwind CSS – Utility-first CSS framework
 
 shadcn/ui – Accessible, reusable UI components
 
+Supabase (PostgreSQL) – Backend, authentication, and real-time APIs
+
+LightGBM / Gradient Boosting – Demand forecasting models
+
 🧪 Development Options
 💻 Local Development
 
@@ -95,22 +106,17 @@ src/
 
 🚀 Deployment
 
-The app can be deployed on platforms like:
+The application is deployed using Vercel.
 
-Vercel
+🔗 Production URL:
+https://medstockwiseapp.vercel.app/
 
-Netlify
-
-Cloudflare Pages
-
-Build command:
+To deploy manually:
 
 npm run build
 
 
-Output directory:
-
-dist/
+Upload the generated dist/ folder to your hosting provider.
 
 📄 License
 
@@ -124,10 +130,10 @@ Fork the repository
 
 Create a new branch
 
-Make your changes
+Commit your changes
 
-Submit a pull request
+Open a pull request
 
 ⭐ Acknowledgements
 
-Built using modern open-source tools and best practices in frontend engineering.
+Built using modern frontend tooling and machine learning best practices for real-world healthcare
